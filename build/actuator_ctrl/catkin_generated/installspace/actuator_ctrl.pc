@@ -1,0 +1,8 @@
+prefix=/home/husky/husky_ws/install
+
+Name: actuator_ctrl
+Description: Description of actuator_ctrl
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
