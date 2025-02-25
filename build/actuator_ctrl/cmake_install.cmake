@@ -52,3 +52,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/actuator_ctrl" TYPE FILE FILES "/home/husky/husky_ws/src/actuator_ctrl/package.xml")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/actuator_ctrl" TYPE PROGRAM FILES "/home/husky/husky_ws/build/actuator_ctrl/catkin_generated/installspace/talker.py")
+endif()
+

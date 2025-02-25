@@ -1,6 +1,6 @@
 set(_CATKIN_CURRENT_PACKAGE "actuator_ctrl")
 set(actuator_ctrl_VERSION "0.0.0")
-set(actuator_ctrl_MAINTAINER "husky <husky@todo.todo>")
+set(actuator_ctrl_MAINTAINER "Matthew Murphy <matthewrmurphy21@gmail.com>")
 set(actuator_ctrl_PACKAGE_FORMAT "2")
 set(actuator_ctrl_BUILD_DEPENDS "roscpp" "rospy" "std_msgs")
 set(actuator_ctrl_BUILD_EXPORT_DEPENDS "roscpp" "rospy" "std_msgs")
