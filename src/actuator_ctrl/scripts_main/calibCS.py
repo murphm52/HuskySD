@@ -30,21 +30,22 @@ i2c = board.I2C()  # Create the I2C bus interface; uses board.SCL and board.SDA
 #########################################
 ### Initalize the PCA9685 and VNH5019 ###
 #########################################
-INA = 26
-INB = 20
+INA = 21
+INB = 26
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(INA, GPIO.OUT)
 GPIO.setup(INB, GPIO.OUT)
 pca = PCA9685(i2c, address=0x40)
 pca.frequency = 100 # Hz
+pcaChan = 0
 dcycle0 = float(1) # Delcaring the duty cycle values
 pwm0 = int(dcycle0 * 0xFFFF)
 
 ##########################################
 ### Initalize the ADS1115 and csRead() ###
 ###########################################
-ads = ADS.ADS1115(i2c, address=0x48)
-CS1 = AnalogIn(ads, ADS.P1)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
+ads = ADS.ADS1115(i2c, address=0x49)
+CS1 = AnalogIn(ads, ADS.P2)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
 rospy.init_node('calibCS', anonymous=True)
 print("{:>5}\t{:>5}".format("raw", "v"))
 dataMat = [] #Initalize data matrix
@@ -52,7 +53,7 @@ dataMat = [] #Initalize data matrix
 
 def newCSV():
 	rows = len(dataMat)
-	with open('calibCS_data.csv', 'w', newline='') as csvfile:
+	with open('calibCS_dataLoaded.csv', 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		
 		# Write file headers
@@ -88,10 +89,10 @@ def dcMot():
 	tNow = 0
 	tLast = 0
 	tLast = int(time.time()*1000)
-	while (tNow-tLast) < intvDC and not rospy.is_shutdown():
+	while (tNow-tLast) < 10000 and not rospy.is_shutdown():
 		tNow = int(time.time()*1000)
 		tNow2 = int(time.time()*1000)
-		pca.channels[0].duty_cycle = pwm0
+		pca.channels[pcaChan].duty_cycle = pwm0
 		GPIO.output(INA, GPIO.HIGH)
 		GPIO.output(INB, GPIO.LOW)
 		if (tNow2 - tLast2) > intv2:
@@ -112,33 +113,39 @@ def csRead(runTime):
 
 def linAct():
 	direc = int(1)
-	global tLast
-	global tLast2
-	while not rospy.is_shutdown():
+	global tLast  # time allows the actuator to change direction
+	global tLast2 # time2 allows csRead to execute
+	global tLast3 # time3 is the master time loop, once this timer is up, the function ends
+	tNow3 = 0
+	#tLast3 = 0
+	tLast3 = int(time.time()*1000)
+	while (tNow3-tLast3) < 2*3*intvLA and not rospy.is_shutdown(): # Runs for 5 full back-forth cycles
 		tNow = int(time.time()*1000)
 		tNow2 = int(time.time()*1000)
+		tNow3 = int(time.time()*1000)
 		if (tNow - tLast) > intvLA:
 			tLast = tNow
 			if direc > 0:
 				direc = -direc
-				pca.channels[0].duty_cycle = pwm0
+				pca.channels[pcaChan].duty_cycle = pwm0
 				GPIO.output(INA, GPIO.HIGH)
 				GPIO.output(INB, GPIO.LOW)
 				print("INA ON\tINB OFF")
 			else:
 				direc = -direc
-				pca.channels[0].duty_cycle = pwm0
+				pca.channels[pcaChan].duty_cycle = pwm0
 				GPIO.output(INA, GPIO.LOW)
 				GPIO.output(INB, GPIO.HIGH)
 				print("INA OFF\tINB ON")
 		
 		if (tNow2 - tLast2) > intv2:
 			tLast2 = tNow2
-			csRead() 
+			runTime = int(tNow3-tLast3)
+			csRead(runTime)
 
 if __name__ == '__main__':
 	try:
-		print("INA ON\tINB OFF")
+#		print("INA ON\tINB OFF")
 		dcMot()
 #		linAct()
 	except rospy.ROSInterruptException:
