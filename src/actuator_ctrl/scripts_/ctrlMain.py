@@ -49,7 +49,6 @@ def setup(INA, INB):
 # Create the I2C bus interface.
 i2c = board.I2C()  # uses board.SCL and board.SDA
 
-# Create a simple PCA9685 class instance.
 pca = PCA9685(i2c, address=0x40)
 
 # Set the PWM frequency to a value in hz.

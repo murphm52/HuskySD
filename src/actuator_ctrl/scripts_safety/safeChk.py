@@ -1,61 +1,81 @@
 #!/usr/bin/env python3
+# Software License Agreement (BSD License)
 #
-# Identifies the ADS1115 breakouts associated with the CS pins and reads the CS pins
-# to ensure the current does not reach abnormal levels.
+# Copyright (c) 2008, Willow Garage, Inc.
+# All rights reserved.
+#
+# Reads potentiometer, current, and IMU readings to determine if any data present dangerous behavior.
+# If dangerous behavior is detected, corrections or shutdown will be executed.
 #
 #
 
 import rospy
 import time
-import board
-import busio
 from std_msgs.msg import Float32
-import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x15.analog_in import AnalogIn
+from std_msgs.msg import Float32MultiArray
+import numpy as np
 
-# Create the I2C bus
-i2c = busio.I2C(board.SCL, board.SDA)
+def conv6(data): # Converts a data.data matrix of length 6 into 6 individual floats
+	print("PT{} = {:>5}\t{:>5.3f}" .format(chanNum, chan.value, chan.voltage)) 
+	# This prints the value and voltage
+	d = np.array(data.data)
+	d1 = d[0]
+	d2 = d[1]
+	d3 = d[2]
+	d4 = d[3]
+	d5 = d[4]
+	d6 = d[5]
+	return [d1,d2,d3,d4,d5,d6]
 
-# Create the ADC object using the I2C bus
-# ads = ADS.ADS1115(i2c)
-# you can specify an I2C adress instead of the default 0x48
-ads2 = ADS.ADS1115(i2c, address=0x49)
-ads3 = ADS.ADS1115(i2c, address=0x4a)
+def callbackPT(data):
+	PT = np.array(data.data)
+	PT1 = PT[0]
+	PT2 = PT[1]
+	PT3 = PT[2]
+	PT4 = PT[3]
+	PT5 = PT[4]
+	PT6 = PT[5]
+	print("PT data received")
+	#print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(PT1,PT2,PT3,PT4,PT5,PT6)) # prints analog voltage for troubleshooting
 
-# Create single-ended input on channel 0
-CS1 = AnalogIn(ads2, ADS.P2)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
-CS2 = AnalogIn(ads2, ADS.P3)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
-CS3 = AnalogIn(ads3, ADS.P0)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
-CS4 = AnalogIn(ads3, ADS.P1)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
-CS5 = AnalogIn(ads3, ADS.P2)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
-CS6 = AnalogIn(ads3, ADS.P3)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
+def callbackCS(data):
+	CS = np.array(data.data)
+	CS1 = CS[0]
+	CS2 = CS[1]
+	CS3 = CS[2]
+	CS4 = CS[3]
+	CS5 = CS[4]
+	CS6 = CS[5]
+	print("CS data received")
+	#print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(CS1,CS2,CS3,CS4,CS5,CS6)) # prints analog voltage for troubleshooting
 
-# Create differential input between channel 0 and 1
-# chan = AnalogIn(ads, ADS.P0, ADS.P1)
+def callbackIMUe(data):
+#	rospy.loginfo(rospy.get_caller_id() + 'I heard %s', data.data)
+#	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(data)) # prints analog voltage for troubleshooting
+	print("IMU Euler angle data recieved")
+	
+def callbackIMUq(data):
+#	rospy.loginfo(rospy.get_caller_id() + 'I heard %s', data.data)
+#	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(data)) # prints analog voltage for troubleshooting
+	print("IMU quaternion data recieved")
+	
+def listen():
 
-#print("{:>5}\t{:>5}".format("raw", "v"))
-
-def CSread(CSchan,chanNum):
-	print("CS%i = {:>5}\t{:>5.3f}" % chanNum .format(CSchan.value, CSchan.voltage)) # This may result in error
-	CSval = float(CSchan.value)
-	CSvol = float(CSchan.voltage)
-
-def talker():
-	pub = rospy.Publisher('current', Float32, queue_size=10)
-	rospy.init_node('CS', anonymous=True)
-	rate = rospy.Rate(10) # 10hz
-	print("{:>5}\t{:>5}".format("raw", "v"))
-	while not rospy.is_shutdown():
-		print("CS1 = {:>5}\t{:>5.3f}".format(CS1.value, CS1.voltage)) # This prints the value and voltage
-		CS1val = float(chan.value)
-		CS1vol = float(chan.voltage)
-		# rospy.loginfo(CSval) # This prints the loginfo
-		pub.publish(CSval)
-		rate.sleep()
-    
-
+	# In ROS, nodes are uniquely named. If two nodes with the same
+	# name are launched, the previous one is kicked off. The
+	# anonymous=True flag means that rospy will choose a unique
+	# name for our 'listener' node so that multiple listeners can
+	# run simultaneously.
+	rospy.init_node('safeChk', anonymous=True)
+	print("PT1:   PT2:   PT3:   PT4:   PT5:   PT6:")
+	rospy.Subscriber('potent', Float32MultiArray, callbackPT)
+	rospy.Subscriber('current', Float32MultiArray, callbackCS)
+	rospy.Subscriber('eulerAng', Float32MultiArray, callbackIMUe)
+#	rospy.Subscriber('quatAng', Float32MultiArray, callbackIMUq)
+	rospy.spin() # spin() simply keeps python from exiting until this node is stopped
+	
 if __name__ == '__main__':
-    try:
-        talker()
-    except rospy.ROSInterruptException:
-        pass
+	try:
+		listen()
+	except rospy.ROSInterruptException:
+		pass

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
+#
+# Reads the IMU data and publishes it to the safeChk.py node.
+#
+#
 
 import time
 import board

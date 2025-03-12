@@ -1,0 +1,6 @@
+<?xml version="1.0">
+<launch>
+
+	<!-- Nodes to be launched -->
+	<node pkg="actuator_ctrl" type=" " name=" " output=" "/>
+</launch>
