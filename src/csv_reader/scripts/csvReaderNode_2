@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+
+import rospy
+import csv
+import os
+from std_msgs.msg import Float32MultiArray
+
+USB_DIR = "/media/lundyn/USB_Black"  # Adjust for your setup
+
+class CSVPublisher:
+    def __init__(self):
+        rospy.init_node('csv_publisher', anonymous=True)
+        self.pub = rospy.Publisher('csv_matrix', Float32MultiArray, queue_size=10)
+
+        self.file_list = self.get_csv_files()
+        self.selected_file_index = 0  # Default file
+
+        rospy.loginfo("CSV Publisher Initialized.")
+
+    def get_csv_files(self):
+        """Gets all CSV files from USB."""
+        if not os.path.exists(USB_DIR):
+            rospy.logwarn("USB directory not found.")
+            return []
+        return [os.path.join(USB_DIR, f) for f in os.listdir(USB_DIR) if f.endswith(".csv")]
+
+    def read_csv(self, file_path):
+        """Reads CSV and converts to a list of float lists."""
+        try:
+            with open(file_path, 'r') as file:
+                reader = csv.reader(file)
+                data = []
+                for row in reader:
+                    try:
+                        parsed_row = [float(value) for value in row]  # Convert to float
+                        data.extend(parsed_row)  # Flatten matrix into a single array
+                    except ValueError:
+                        rospy.logwarn(f"Skipping invalid row: {row}")
+                return data
+        except Exception as e:
+            rospy.logerr(f"Error reading CSV: {e}")
+            return []
+
+    def publish_csv(self):
+        """Publishes the CSV data as Float32MultiArray."""
+        rate = rospy.Rate(1)  # 1 Hz
+        while not rospy.is_shutdown():
+            if not self.file_list:
+                rospy.logwarn("No CSV files available. Rescanning...")
+                self.file_list = self.get_csv_files()
+                rate.sleep()
+                continue
+
+            file_path = self.file_list[self.selected_file_index]
+            rospy.loginfo(f"Publishing from {file_path}...")
+
+            csv_data = self.read_csv(file_path)
+            if csv_data:
+                msg = Float32MultiArray()
+                msg.data = csv_data  # Store flattened matrix
+                self.pub.publish(msg)
+                rospy.loginfo("Published CSV data.")
+
+            rate.sleep()
+
+if __name__ == '__main__':
+    try:
+        node = CSVPublisher()
+        node.publish_csv()
+    except rospy.ROSInterruptException:
+        pass
+
