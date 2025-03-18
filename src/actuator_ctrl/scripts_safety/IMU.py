@@ -20,7 +20,7 @@ last_val = 0xFFFF
 def talker():
 	pub = rospy.Publisher('eulerAng', Float32, queue_size=10)
 	pub = rospy.Publisher('quatAng', Float32, queue_size=10)
-	rospy.init_node('CS', anonymous=True)
+	rospy.init_node('BNO', anonymous=True)
 	rate = rospy.Rate(10) # 10hz
 	#print("{:>5}\t{:>5}".format("raw", "v"))
 	while not rospy.is_shutdown():
