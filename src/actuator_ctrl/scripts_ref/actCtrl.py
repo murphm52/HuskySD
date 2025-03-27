@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
+## NODE DESCRIPTION ##
+## OUTDATED ##
 # Outputs a PWM signal with a constant duty cycle to a VNH5019 motor driver carrer.
 # Communicates with a node that reads the current sense (CS) value from the VNH5019.
 # 

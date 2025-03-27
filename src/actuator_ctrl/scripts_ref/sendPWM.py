@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+## COPYRIGHT STATEMENT ##
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
+# Outputs a 50% duty cycle PWM single on the 0th channel.
+# Connect an LED and resistor in series to the pin
+# to visualize duty cycle changes and its impact on brightness.
 
+
+## NODE DESCRIPTION ##
 # Outputs a PWM signal with a constant duty cycle to a VNH5019 motor driver carrer.
-# 
-# 
 
 import rospy
 import time

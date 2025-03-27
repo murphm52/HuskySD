@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+
+## COPYRIGHT STATEMENT ##
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
-#
+
+## NODE DESCRIPTION ##
 # This node reads the VNH5019 CS pin and logs it into a CSV file
-#
 
 import rospy
 import time

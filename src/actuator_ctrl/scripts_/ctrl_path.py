@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+## NODE DESCRIPTION ##
+# Reads the CSV path row by row and publishes the data to ctrl_exec.
+
 import rospy
 import csv
 import os
@@ -10,7 +13,7 @@ def csv_reader():
 	rospy.init_node('path_node', anonymous=True)
 	pubPath = rospy.Publisher('path', Float32MultiArray, queue_size=10)
 	rate = rospy.Rate(10)  # 10 Hz
-	csv_file_path = os.path.expanduser('~/husky_ws/src/actuator_ctrl/scripts_/sixDOF.csv')
+	csv_file_path = os.path.expanduser('~/husky_ws/src/actuator_ctrl/scripts_/paths/sixDOF.csv')
 
 	try:
 		with open(csv_file_path, 'r') as csvfile:

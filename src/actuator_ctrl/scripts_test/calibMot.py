@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 
-## COPYRIGHT STATEMENT ##
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
-# Outputs a 50% duty cycle PWM single on the 0th channel.
-# Connect an LED and resistor in series to the pin
-# to visualize duty cycle changes and its impact on brightness.
 
-## NODE DESCRIPTION ##
-# Outputs a PWM signals to six separate motor drivers based on the data published by ctrl_path over topic "path."
+# Test the linear actuator at different duty cycles and figure out what duty cycle values
+# return what speeds
+# 
 
 import rospy
 import board
 import busio
+import time
 import RPi.GPIO as GPIO
 from std_msgs.msg import Float32 
 from std_msgs.msg import Float32MultiArray
@@ -42,13 +40,15 @@ INB6 = 17
 INA = [INA1, INA2, INA3, INA4, INA5, INA6]
 INB = [INB1, INB2, INB3, INB4, INB5, INB6]
 
+# Define the duty cycle value to test:
+dcyc = 1
+
+
 # DO NOT USE THE INA AND INB MATRICIES FOR THIS FUNCTION
 def initGPIO(INA, INB):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(INA, GPIO.OUT)
 	GPIO.setup(INB, GPIO.OUT)
-
-
 	
 def initI2C():
 	global pca
@@ -76,7 +76,7 @@ def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual flo
 		GPIO.output(INB, GPIO.HIGH)
 #		print("Motor %i backward." % int(pcaChan+1))
 
-def return2zero(INA, INB, dcyc):			
+def return2zero(INA, INB):			
 	print("All motors stop")
 	run(INA[0],INB[0],-1,0)
 #	run(INA[1],INB[1],-1,1)
@@ -104,34 +104,22 @@ def init():
 	initI2C()
 	rospy.init_node('exec_node', anonymous=True)
 
-def callbackKill(data):
-	rospy.loginfo(data.data)
 
-def callbackPath(data):
-	global INA
-	global INB
-	vec = np.array(data.data)
-	dis = vec[0:6]
-	dcyc = vec[6:12]
+def main():
+	# Initalize subscriber topics
 	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
 #	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc[1]))
 #	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc[2]))
 #	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc[3]))
 #	print("Motor 5 set to duty cycle {:>5.3f}." .format(dcyc[4]))
 #	print("Motor 6 set to duty cycle {:>5.3f}." .format(dcyc[5]))
-	run(INA[0],INB[0],dcyc[0],0)
-#	run(INA[1],INB[1],dcyc[1],1)
-#	run(INA[2],INB[2],dcyc[2],2)
-#	run(INA[3],INB[3],dcyc[3],3)
-#	run(INA[4],INB[4],dcyc[4],4)
-#	run(INA[5],INB[5],dcyc[5],5)
-#	print(format(dcyc)) # prints analog voltage for troubleshooting
-#	rospy.loginfo(data.data)
-
-def main():
-	# Initalize subscriber topics
+	run(INA[0],INB[0],dcyc,0)
+#	run(INA[1],INB[1],dcyc,1)
+#	run(INA[2],INB[2],dcyc,2)
+#	run(INA[3],INB[3],dcyc,3)
+#	run(INA[4],INB[4],dcyc,4)
+#	run(INA[5],INB[5],dcyc,5)
 	rospy.Subscriber('path', Float32MultiArray, callbackPath)
-#	rospy.Subscriber('kill', Bool, callbackPath)
 	rospy.spin()
 
 if __name__=='__main__':
@@ -141,6 +129,6 @@ if __name__=='__main__':
 	except rospy.ROSInterruptException:
 		pass # "pass" makes sure the node exits without issues
 	finally:
-		return2zero(INA, INB, dcyc)
+		return2zero(INA, INB)
 		GPIO.cleanup()
 

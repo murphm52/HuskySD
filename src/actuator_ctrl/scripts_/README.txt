@@ -1,0 +1,1 @@
+The /scripts_ directory contains the nodes required to run the Husky's system through its path-following algorithm. This folder does not include nodes required for testing and calibration of the system, however, these nodes are cross-referenced in the scripts_test directory.
