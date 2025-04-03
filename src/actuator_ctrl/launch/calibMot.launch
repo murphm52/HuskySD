@@ -2,8 +2,6 @@
 <launch>
 
 	<!-- Nodes to be launched -->
-	<node pkg="actuator_ctrl" type="CS.py" name="CS_node" output="screen" launch-prefix="xterm -e"/>
 	<node pkg="actuator_ctrl" type="PT.py" name="PT_node" output="screen" launch-prefix="xterm -e"/>
-	<node pkg="actuator_ctrl" type="safeChk.py" name="safe_node" output="screen" launch-prefix="xterm -e"/>
-	<node pkg="actuator_ctrl" type="ctrlMain.py" name="main" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="calibMot.py" name="exec_node" output="screen" launch-prefix="xterm -e"/>
 </launch>

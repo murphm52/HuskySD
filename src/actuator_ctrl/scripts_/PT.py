@@ -59,12 +59,13 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # specify the I2C addresses for the ADS1115 boards
 ads1 = ADS.ADS1115(i2c, address=0x48)
 ads2 = ADS.ADS1115(i2c, address=0x49)
+ads3 = ADS.ADS1115(i2c, address=0x4a)
 PT1 = AnalogIn(ads1, ADS.P0)	
 PT2 = AnalogIn(ads1, ADS.P1)	
-PT3 = AnalogIn(ads1, ADS.P2)	
-PT4 = AnalogIn(ads1, ADS.P3)	
-PT5 = AnalogIn(ads2, ADS.P0)	
-PT6 = AnalogIn(ads2, ADS.P1)	
+PT3 = AnalogIn(ads2, ADS.P0)	
+PT4 = AnalogIn(ads2, ADS.P1)	
+PT5 = AnalogIn(ads3, ADS.P0)	
+PT6 = AnalogIn(ads3, ADS.P1)	
 
 def talker():
 	pub = rospy.Publisher('potent', Float32MultiArray, queue_size=10)

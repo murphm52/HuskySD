@@ -1,0 +1,8 @@
+prefix=/home/husky/husky_ws/devel
+
+Name: csv_reader
+Description: Description of csv_reader
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

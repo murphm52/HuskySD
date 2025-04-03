@@ -78,48 +78,59 @@ def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual flo
 
 def return2zero(INA, INB):			
 	print("All motors stop")
-	run(INA[0],INB[0],-1,0)
-#	run(INA[1],INB[1],-1,1)
-#	run(INA[2],INB[2],-1,2)
-#	run(INA[3],INB[3],-1,3)
-#	run(INA[4],INB[4],-1,4)
-#	run(INA[5],INB[5],-1,5)
+	run(INA[0],INB[0],-dcyc,0)
+	run(INA[1],INB[1],-dcyc,1)
+	run(INA[2],INB[2],-dcyc,2)
+	run(INA[3],INB[3],-dcyc,3)
+	run(INA[4],INB[4],-dcyc,4)
+	run(INA[5],INB[5],-dcyc,5)
 	time.sleep(6)			# Temporary
 	pca.channels[0].duty_cycle = 0
-#	pca.channels[1].duty_cycle = 0
-#	pca.channels[2].duty_cycle = 0
-#	pca.channels[3].duty_cycle = 0
-#	pca.channels[4].duty_cycle = 0
-#	pca.channels[5].duty_cycle = 0
+	pca.channels[1].duty_cycle = 0
+	pca.channels[2].duty_cycle = 0
+	pca.channels[3].duty_cycle = 0
+	pca.channels[4].duty_cycle = 0
+	pca.channels[5].duty_cycle = 0
 	# Replace time.sleep with a while loop that detects when all actuators stop moving 
 	# based on their potentiometer feedbacks.
 
 def init():
 	initGPIO(INA1, INB1)
-#	initGPIO(INA2, INB2)
-#	initGPIO(INA3, INB3)
-#	initGPIO(INA4, INB4)
-#	initGPIO(INA5, INB5)
-#	initGPIO(INA6, INB6)
+	initGPIO(INA2, INB2)
+	initGPIO(INA3, INB3)
+	initGPIO(INA4, INB4)
+	initGPIO(INA5, INB5)
+	initGPIO(INA6, INB6)
 	initI2C()
 	rospy.init_node('exec_node', anonymous=True)
 
+def callbackPT(data):
+	global PTpub
+	PT = np.array(data.data)
+	PT1 = PT[0]
+	PT2 = PT[1]
+	PT3 = PT[2]
+	PT4 = PT[3]
+	PT5 = PT[4]
+	PT6 = PT[5]
+	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(PT1,PT2,PT3,PT4,PT5,PT6))
+#	return [PT1,PT2,PT3,PT4,PT5,PT6]
 
 def main():
 	# Initalize subscriber topics
-	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
-#	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc[1]))
-#	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc[2]))
-#	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc[3]))
-#	print("Motor 5 set to duty cycle {:>5.3f}." .format(dcyc[4]))
-#	print("Motor 6 set to duty cycle {:>5.3f}." .format(dcyc[5]))
+	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc))
+	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc))
+	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc))
+	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc))
+	print("Motor 5 set to duty cycle {:>5.3f}." .format(dcyc))
+	print("Motor 6 set to duty cycle {:>5.3f}." .format(dcyc))
 	run(INA[0],INB[0],dcyc,0)
-#	run(INA[1],INB[1],dcyc,1)
-#	run(INA[2],INB[2],dcyc,2)
-#	run(INA[3],INB[3],dcyc,3)
-#	run(INA[4],INB[4],dcyc,4)
-#	run(INA[5],INB[5],dcyc,5)
-	rospy.Subscriber('path', Float32MultiArray, callbackPath)
+	run(INA[1],INB[1],dcyc,1)
+	run(INA[2],INB[2],dcyc,2)
+	run(INA[3],INB[3],dcyc,3)
+	run(INA[4],INB[4],dcyc,4)
+	run(INA[5],INB[5],dcyc,5)
+	rospy.Subscriber('potent', Float32MultiArray, callbackPT)
 	rospy.spin()
 
 if __name__=='__main__':

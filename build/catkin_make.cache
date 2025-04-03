@@ -1,2 +1,2 @@
-actuator_ctrl
+actuator_ctrl:csv_reader
 -DCATKIN_DEVEL_PREFIX=/home/husky/husky_ws/devel -DCMAKE_INSTALL_PREFIX=/home/husky/husky_ws/install -G Unix Makefiles

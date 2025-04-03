@@ -57,14 +57,15 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create the ADC object using the I2C bus
 # ads = ADS.ADS1115(i2c)
 # specify the I2C addresses for the ADS1115 boards
-ads1 = ADS.ADS1115(i2c, address=0x49)
-ads2 = ADS.ADS1115(i2c, address=0x4a)
+ads1 = ADS.ADS1115(i2c, address=0x48)
+ads2 = ADS.ADS1115(i2c, address=0x49)
+ads3 = ADS.ADS1115(i2c, address=0x4a)
 CS1 = AnalogIn(ads1, ADS.P2)
 CS2 = AnalogIn(ads1, ADS.P3)
-CS3 = AnalogIn(ads2, ADS.P0)
-CS4 = AnalogIn(ads2, ADS.P1)
-CS5 = AnalogIn(ads2, ADS.P2)
-CS6 = AnalogIn(ads2, ADS.P3)
+CS3 = AnalogIn(ads2, ADS.P2)
+CS4 = AnalogIn(ads2, ADS.P3)
+CS5 = AnalogIn(ads3, ADS.P2)
+CS6 = AnalogIn(ads3, ADS.P3)
 
 
 def talker():

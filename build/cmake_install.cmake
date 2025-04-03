@@ -132,6 +132,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/husky/husky_ws/build/gtest/cmake_install.cmake")
   include("/home/husky/husky_ws/build/actuator_ctrl/cmake_install.cmake")
+  include("/home/husky/husky_ws/build/csv_reader/cmake_install.cmake")
 
 endif()
 
