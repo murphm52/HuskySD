@@ -6,8 +6,12 @@
 #
 #
 
+import rospy
 import time
 import board
+import busio
+from std_msgs.msg import Float32
+from std_msgs.msg import Float32MultiArray
 import adafruit_bno055
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -19,17 +23,16 @@ last_val = 0xFFFF
 
 def talker():
 	pub = rospy.Publisher('eulerAng', Float32, queue_size=10)
-	pub = rospy.Publisher('quatAng', Float32, queue_size=10)
 	rospy.init_node('BNO', anonymous=True)
-	rate = rospy.Rate(10) # 10hz
+	rate = rospy.Rate(2) # 10hz
 	#print("{:>5}\t{:>5}".format("raw", "v"))
 	while not rospy.is_shutdown():
 		euler = sensor.euler
-		quat = sensor.quaternion
-		print("Euler angle: {}".format(euler))
-		print("Quaternion: {}".format(quat)) # prints analog voltage for troubleshooting
-		pub.publish(eulerAng)
-		pub.publish(quatAng)
+		accel = sensor.acceleration
+#		print("Euler angle: {}".format(euler))
+		print("Acceleration: {}".format(accel))
+		pub.publish(euler)
+#		pub.publish(quat)
 		rate.sleep()
 
 if __name__ == '__main__':

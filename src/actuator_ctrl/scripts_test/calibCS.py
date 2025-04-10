@@ -46,7 +46,7 @@ pwm0 = int(dcycle0 * 0xFFFF)
 ##########################################
 ### Initalize the ADS1115 and csRead() ###
 ###########################################
-ads = ADS.ADS1115(i2c, address=0x49)
+ads = ADS.ADS1115(i2c, address=0x48)
 CS1 = AnalogIn(ads, ADS.P2)	### CHANGE DEPENDING ON PINOUT TO ADS1115 ###
 rospy.init_node('calibCS', anonymous=True)
 print("{:>5}\t{:>5}".format("raw", "v"))
@@ -55,7 +55,7 @@ dataMat = [] #Initalize data matrix
 
 def newCSV():
 	rows = len(dataMat)
-	with open('calibCS_dataLoaded.csv', 'w', newline='') as csvfile:
+	with open('calibCS_data.csv', 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		
 		# Write file headers
@@ -79,7 +79,7 @@ def newCSV():
 
 # Time loop variables
 intvLA = 2000
-intvDC = 15000
+intvDC = 60000
 intv2 = 100
 tLast = 0
 tLast2 = 0
@@ -91,7 +91,7 @@ def dcMot():
 	tNow = 0
 	tLast = 0
 	tLast = int(time.time()*1000)
-	while (tNow-tLast) < 10000 and not rospy.is_shutdown():
+	while (tNow-tLast) < intvDC and not rospy.is_shutdown():
 		tNow = int(time.time()*1000)
 		tNow2 = int(time.time()*1000)
 		pca.channels[pcaChan].duty_cycle = pwm0

@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
-
-# Test the linear actuator at different duty cycles and figure out what duty cycle values
-# return what speeds
-# 
-
 import rospy
 import board
 import busio
@@ -40,14 +33,9 @@ INB6 = 17
 INA = [INA1, INA2, INA3, INA4, INA5, INA6]
 INB = [INB1, INB2, INB3, INB4, INB5, INB6]
 
-
-
 # Define the duty cycle value to test:
 dcyc = 1
 
-
-
-# DO NOT USE THE INA AND INB MATRICIES FOR THIS FUNCTION
 def initGPIO(INA, INB):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(INA, GPIO.OUT)
@@ -81,12 +69,30 @@ def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual flo
 
 def setSpeed():
 	print("All motors set to duty cycle {:>5.3f}." .format(dcyc))
-	run(INA[0],INB[0],dcyc,0)
-	run(INA[1],INB[1],dcyc,1)
-	run(INA[2],INB[2],dcyc,2)
-	run(INA[3],INB[3],dcyc,3)
-	run(INA[4],INB[4],dcyc,4)
+#	run(INA[0],INB[0],dcyc,0)
+#	run(INA[1],INB[1],dcyc,1)
+#	run(INA[2],INB[2],dcyc,2)
+#	run(INA[3],INB[3],dcyc,3)
+#	run(INA[4],INB[4],dcyc,4)
 	run(INA[5],INB[5],dcyc,5)
+
+def return2zero(INA, INB):			
+	print("All motors go back")
+#	run(INA[0],INB[0],-dcyc,0)
+#	run(INA[1],INB[1],-dcyc,1)
+#	run(INA[2],INB[2],-dcyc,2)
+#	run(INA[3],INB[3],-dcyc,3)
+#	run(INA[4],INB[4],-dcyc,4)
+	run(INA[5],INB[5],-dcyc,5)
+	time.sleep(6)			# Temporary
+#	pca.channels[0].duty_cycle = 0
+#	pca.channels[1].duty_cycle = 0
+#	pca.channels[2].duty_cycle = 0
+#	pca.channels[3].duty_cycle = 0
+#	pca.channels[4].duty_cycle = 0
+	pca.channels[5].duty_cycle = 0
+	# Replace time.sleep with a while loop that detects when all actuators stop moving 
+	# based on their potentiometer feedbacks.
 
 def init():
 	initGPIO(INA1, INB1)
@@ -97,50 +103,23 @@ def init():
 	initGPIO(INA6, INB6)
 	initI2C()
 	rospy.init_node('exec_node', anonymous=True)
-	setSpeed()
-
-def callbackPT(data):
-	global PTpub
-	PT = np.array(data.data)
-	PT1 = PT[0]
-	PT2 = PT[1]
-	PT3 = PT[2]
-	PT4 = PT[3]
-	PT5 = PT[4]
-	PT6 = PT[5]
-	runTime = PT[6]
-	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(PT1,PT2,PT3,PT4,PT5,PT6,runTime))
-
+	
+	
 def main():
 	# Initalize subscriber topics
-	rospy.Subscriber('potent', Float32MultiArray, callbackPT)
+	setSpeed()
 	rospy.spin()
-
-def return2zero(INA, INB):			
-	print("All motors go back")
-	run(INA[0],INB[0],-dcyc,0)
-	run(INA[1],INB[1],-dcyc,1)
-	run(INA[2],INB[2],-dcyc,2)
-	run(INA[3],INB[3],-dcyc,3)
-	run(INA[4],INB[4],-dcyc,4)
-	run(INA[5],INB[5],-dcyc,5)
-	time.sleep(12)			# Temporary
-	pca.channels[0].duty_cycle = 0
-	pca.channels[1].duty_cycle = 0
-	pca.channels[2].duty_cycle = 0
-	pca.channels[3].duty_cycle = 0
-	pca.channels[4].duty_cycle = 0
-	pca.channels[5].duty_cycle = 0
-	# Replace time.sleep with a while loop that detects when all actuators stop moving 
-	# based on their potentiometer feedbacks.
+	
 
 if __name__=='__main__':
 	try:
 		init()
-		main() # Go into the function itself to enable/disable specific actuators.
+		main()
 	except rospy.ROSInterruptException:
 		pass # "pass" makes sure the node exits without issues
 	finally:
 		return2zero(INA, INB)
 		GPIO.cleanup()
+
+
 

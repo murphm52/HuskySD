@@ -2,6 +2,6 @@
 <launch>
 
 	<!-- Nodes to be launched -->
-	<node pkg="actuator_ctrl" type="PT.py" name="PT_node" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="timedPT.py" name="PT_node" output="screen" launch-prefix="xterm -e"/>
 	<node pkg="actuator_ctrl" type="calibMot.py" name="exec_node" output="screen" launch-prefix="xterm -e"/>
 </launch>
