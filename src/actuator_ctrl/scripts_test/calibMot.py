@@ -119,13 +119,13 @@ def return2zero(INA, INB):
 	run(INA[3],INB[3],-1,3)
 	run(INA[4],INB[4],-1,4)
 	run(INA[5],INB[5],-1,5)
-	time.sleep(10)			# Temporary
-	pca.channels[0].duty_cycle = 0
-	pca.channels[1].duty_cycle = 0
-	pca.channels[2].duty_cycle = 0
-	pca.channels[3].duty_cycle = 0
-	pca.channels[4].duty_cycle = 0
-	pca.channels[5].duty_cycle = 0
+#	time.sleep(20)			# Temporary
+#	pca.channels[0].duty_cycle = 0
+#	pca.channels[1].duty_cycle = 0
+#	pca.channels[2].duty_cycle = 0
+#	pca.channels[3].duty_cycle = 0
+#	pca.channels[4].duty_cycle = 0
+#	pca.channels[5].duty_cycle = 0
 	# Replace time.sleep with a while loop that detects when all actuators stop moving 
 	# based on their potentiometer feedbacks.
 
@@ -136,11 +136,11 @@ def return2zero(INA, INB):
 
 
 # Define the duty cycle value to test:
-dcyc = 0.95
+dcyc = 0.10
 
 def newCSV():
 	rows = len(dataMat)
-	with open('cmotData095.csv', 'w', newline='') as csvfile:
+	with open('cmotData010_2.csv', 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		
 		# Write file headers
@@ -171,5 +171,5 @@ if __name__=='__main__':
 	finally:
 		newCSV()
 		return2zero(INA, INB)
-		GPIO.cleanup()
+#		GPIO.cleanup()
 
