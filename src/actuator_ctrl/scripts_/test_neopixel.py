@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 import time
 import board
 import neopixel
+from std_msgs.msg import Bool
 
 #LED strip configuration
 LED_COUNT=30 #Adjust based on setup

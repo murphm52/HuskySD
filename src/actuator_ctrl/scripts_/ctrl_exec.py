@@ -47,8 +47,6 @@ def initGPIO(INA, INB):
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(INA, GPIO.OUT)
 	GPIO.setup(INB, GPIO.OUT)
-
-
 	
 def initI2C():
 	global pca
@@ -60,21 +58,17 @@ def initI2C():
 
 def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual float
 	if dcyc > 0:
-		# The PWM cycle values must be converted to a value between 0 and 65535.
-		# The 0xFFFF is the maximum value that can be represented by a 16-bit
-		# unsigned integer. Multiplying a value between 0 and 1 with 0xFFFF
-		# creates a duty cycle value that can be used by the system.
+		print("+Motor 1 set to duty cycle {:>5.3f}." .format(dcyc))
 		pwm = int(abs(dcyc) * 0xFFFF)
 		pca.channels[pcaChan].duty_cycle = pwm
 		GPIO.output(INA, GPIO.HIGH)
 		GPIO.output(INB, GPIO.LOW)
-#		print("Motor %i forward." % int(pcaChan+1))
 	else:
+		print("-Motor 1 set to duty cycle {:>5.3f}." .format(dcyc))
 		pwm = int(abs(dcyc) * 0xFFFF)
 		pca.channels[pcaChan].duty_cycle = pwm
 		GPIO.output(INA, GPIO.LOW)
 		GPIO.output(INB, GPIO.HIGH)
-#		print("Motor %i backward." % int(pcaChan+1))
 
 def return2zero(INA, INB, dcyc):			
 	print("All motors stop")
@@ -113,7 +107,7 @@ def callbackPath(data):
 	vec = np.array(data.data)
 	dis = vec[0:6]
 	dcyc = vec[6:12]
-	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
+#	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
 #	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc[1]))
 #	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc[2]))
 #	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc[3]))

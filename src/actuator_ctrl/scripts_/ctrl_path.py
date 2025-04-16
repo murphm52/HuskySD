@@ -13,7 +13,7 @@ def csv_reader():
 	rospy.init_node('path_node', anonymous=True)
 	pubPath = rospy.Publisher('path', Float32MultiArray, queue_size=10)
 	rate = rospy.Rate(10)  # 10 Hz
-	csv_file_path = os.path.expanduser('~/husky_ws/src/actuator_ctrl/scripts_/paths/sixDOF.csv')
+	csv_file_path = os.path.expanduser('~/husky_ws/src/actuator_ctrl/scripts_/paths/6DOF.csv')
 
 	try:
 		with open(csv_file_path, 'r') as csvfile:

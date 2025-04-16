@@ -57,19 +57,17 @@ i2c = busio.I2C(board.SCL, board.SDA)
 # Create the ADC object using the I2C bus
 # ads = ADS.ADS1115(i2c)
 # specify the I2C addresses for the ADS1115 boards
-def initI2C():
-	ads1 = ADS.ADS1115(i2c, address=0x48)
-	ads2 = ADS.ADS1115(i2c, address=0x49)
-	ads3 = ADS.ADS1115(i2c, address=0x4a)
-	PT1 = AnalogIn(ads1, ADS.P0)	
-	PT2 = AnalogIn(ads1, ADS.P1)	
-	PT3 = AnalogIn(ads2, ADS.P0)	
-	PT4 = AnalogIn(ads2, ADS.P1)	
-	PT5 = AnalogIn(ads3, ADS.P0)	
-	PT6 = AnalogIn(ads3, ADS.P1)	
+ads1 = ADS.ADS1115(i2c, address=0x48)
+ads2 = ADS.ADS1115(i2c, address=0x49)
+ads3 = ADS.ADS1115(i2c, address=0x4a)
+PT1 = AnalogIn(ads1, ADS.P0)	
+PT2 = AnalogIn(ads1, ADS.P1)	
+PT3 = AnalogIn(ads2, ADS.P0)	
+PT4 = AnalogIn(ads2, ADS.P1)	
+PT5 = AnalogIn(ads3, ADS.P0)	
+PT6 = AnalogIn(ads3, ADS.P1)	
 
 def talker():
-	initI2C()
 	pub = rospy.Publisher('potent', Float32MultiArray, queue_size=10)
 	rospy.init_node('PT_node', anonymous=True)
 	rate = rospy.Rate(100) # 10hz
@@ -84,7 +82,7 @@ def talker():
 		V4 = float(PT4.voltage)
 		V5 = float(PT5.voltage)
 		V6 = float(PT6.voltage)
-		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(V1,V2,V3,V4,V5,V6,runTime)) # prints analog voltage for troubleshooting
+#		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(V1,V2,V3,V4,V5,V6,runTime)) # prints analog voltage for troubleshooting
 		ptVol = Float32MultiArray()
 		ptVol.data = [V1,V2,V3,V4,V5,V6,runTime]
 		pub.publish(ptVol)
