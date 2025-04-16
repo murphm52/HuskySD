@@ -57,44 +57,49 @@ def initI2C():
 	pca.frequency = 100
 
 def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual float
+
 	if dcyc > 0:
-		print("+Motor 1 set to duty cycle {:>5.3f}." .format(dcyc))
+#		print("+Motor set to duty cycle {:>5.3f}." .format(dcyc))
 		pwm = int(abs(dcyc) * 0xFFFF)
 		pca.channels[pcaChan].duty_cycle = pwm
 		GPIO.output(INA, GPIO.HIGH)
 		GPIO.output(INB, GPIO.LOW)
-	else:
-		print("-Motor 1 set to duty cycle {:>5.3f}." .format(dcyc))
+	elif dcyc < 0:
+#		print("-Motor set to duty cycle {:>5.3f}." .format(dcyc))
 		pwm = int(abs(dcyc) * 0xFFFF)
 		pca.channels[pcaChan].duty_cycle = pwm
 		GPIO.output(INA, GPIO.LOW)
 		GPIO.output(INB, GPIO.HIGH)
+	elif dcyc == 0:
+#		print("Motor stop (duty cycle = {:>5.3f})." .format(dcyc))
+		GPIO.output(INA, GPIO.LOW)
+		GPIO.output(INB, GPIO.LOW)
 
 def return2zero(INA, INB, dcyc):			
 	print("All motors stop")
 	run(INA[0],INB[0],-1,0)
-#	run(INA[1],INB[1],-1,1)
-#	run(INA[2],INB[2],-1,2)
-#	run(INA[3],INB[3],-1,3)
-#	run(INA[4],INB[4],-1,4)
-#	run(INA[5],INB[5],-1,5)
+	run(INA[1],INB[1],-1,1)
+	run(INA[2],INB[2],-1,2)
+	run(INA[3],INB[3],-1,3)
+	run(INA[4],INB[4],-1,4)
+	run(INA[5],INB[5],-1,5)
 	time.sleep(6)			# Temporary
 	pca.channels[0].duty_cycle = 0
-#	pca.channels[1].duty_cycle = 0
-#	pca.channels[2].duty_cycle = 0
-#	pca.channels[3].duty_cycle = 0
-#	pca.channels[4].duty_cycle = 0
-#	pca.channels[5].duty_cycle = 0
+	pca.channels[1].duty_cycle = 0
+	pca.channels[2].duty_cycle = 0
+	pca.channels[3].duty_cycle = 0
+	pca.channels[4].duty_cycle = 0
+	pca.channels[5].duty_cycle = 0
 	# Replace time.sleep with a while loop that detects when all actuators stop moving 
 	# based on their potentiometer feedbacks.
 
 def init():
 	initGPIO(INA1, INB1)
-#	initGPIO(INA2, INB2)
-#	initGPIO(INA3, INB3)
-#	initGPIO(INA4, INB4)
-#	initGPIO(INA5, INB5)
-#	initGPIO(INA6, INB6)
+	initGPIO(INA2, INB2)
+	initGPIO(INA3, INB3)
+	initGPIO(INA4, INB4)
+	initGPIO(INA5, INB5)
+	initGPIO(INA6, INB6)
 	initI2C()
 	rospy.init_node('exec_node', anonymous=True)
 
@@ -107,18 +112,19 @@ def callbackPath(data):
 	vec = np.array(data.data)
 	dis = vec[0:6]
 	dcyc = vec[6:12]
-#	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
-#	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc[1]))
-#	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc[2]))
-#	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc[3]))
-#	print("Motor 5 set to duty cycle {:>5.3f}." .format(dcyc[4]))
-#	print("Motor 6 set to duty cycle {:>5.3f}." .format(dcyc[5]))
+	print("Motor 1 set to duty cycle {:>5.3f}." .format(dcyc[0]))
+	print("Motor 2 set to duty cycle {:>5.3f}." .format(dcyc[1]))
+	print("Motor 3 set to duty cycle {:>5.3f}." .format(dcyc[2]))
+	print("Motor 4 set to duty cycle {:>5.3f}." .format(dcyc[3]))
+	print("Motor 5 set to duty cycle {:>5.3f}." .format(dcyc[4]))
+	print("Motor 6 set to duty cycle {:>5.3f}." .format(dcyc[5]))
+
 	run(INA[0],INB[0],dcyc[0],0)
-#	run(INA[1],INB[1],dcyc[1],1)
-#	run(INA[2],INB[2],dcyc[2],2)
-#	run(INA[3],INB[3],dcyc[3],3)
-#	run(INA[4],INB[4],dcyc[4],4)
-#	run(INA[5],INB[5],dcyc[5],5)
+	run(INA[1],INB[1],dcyc[1],1)
+	run(INA[2],INB[2],dcyc[2],2)
+	run(INA[3],INB[3],dcyc[3],3)
+	run(INA[4],INB[4],dcyc[4],4)
+	run(INA[5],INB[5],dcyc[5],5)
 #	print(format(dcyc)) # prints analog voltage for troubleshooting
 #	rospy.loginfo(data.data)
 

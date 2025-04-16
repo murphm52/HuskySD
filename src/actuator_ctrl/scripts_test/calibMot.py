@@ -42,10 +42,6 @@ INA = [INA1, INA2, INA3, INA4, INA5, INA6]
 INB = [INB1, INB2, INB3, INB4, INB5, INB6]
 
 
-
-# Define the duty cycle value to test:
-dcyc = 1
-
 # Initalize data matrix
 dataMat = [] #Initalize data matrix
 
@@ -115,11 +111,6 @@ def callbackPT(data):
 	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(PT1,PT2,PT3,PT4,PT5,PT6,runTime))
 	dataMat.append([PT1,PT2,PT3,PT4,PT5,PT6,runTime])
 
-def main():
-	# Initalize subscriber topics
-	rospy.Subscriber('potent', Float32MultiArray, callbackPT)
-	rospy.spin()
-
 def return2zero(INA, INB):			
 	print("All motors go back")
 	run(INA[0],INB[0],-1,0)
@@ -138,9 +129,18 @@ def return2zero(INA, INB):
 	# Replace time.sleep with a while loop that detects when all actuators stop moving 
 	# based on their potentiometer feedbacks.
 
+
+
+
+
+
+
+# Define the duty cycle value to test:
+dcyc = 0.95
+
 def newCSV():
 	rows = len(dataMat)
-	with open('cmotData100.csv', 'w', newline='') as csvfile:
+	with open('cmotData095.csv', 'w', newline='') as csvfile:
 		csvwriter = csv.writer(csvfile)
 		
 		# Write file headers
@@ -150,6 +150,18 @@ def newCSV():
 		for i in range(rows):
 			csvwriter.writerow(dataMat[i])
 
+
+
+
+
+
+
+def main():
+	# Initalize subscriber topics
+	rospy.Subscriber('potent', Float32MultiArray, callbackPT)
+	rospy.spin()
+
+
 if __name__=='__main__':
 	try:
 		init()
@@ -157,7 +169,7 @@ if __name__=='__main__':
 	except rospy.ROSInterruptException:
 		pass # "pass" makes sure the node exits without issues
 	finally:
-	#	newCSV()
+		newCSV()
 		return2zero(INA, INB)
 		GPIO.cleanup()
 
