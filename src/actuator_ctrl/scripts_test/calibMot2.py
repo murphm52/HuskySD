@@ -79,12 +79,12 @@ def run(INA,INB,dcyc,pcaChan): # In this function, var dcyc is an individual flo
 
 def setSpeed():
 	print("All motors set to duty cycle {:>5.3f}." .format(dcyc))
-	run(INA[0],INB[0],dcyc1,0)
-	run(INA[1],INB[1],dcyc2,1)
-	run(INA[2],INB[2],dcyc3,2)
-	run(INA[3],INB[3],dcyc4,3)
-	run(INA[4],INB[4],dcyc5,4)
-	run(INA[5],INB[5],dcyc6,5)
+	run(INA[0],INB[0],dcyc,0)
+	run(INA[1],INB[1],dcyc,1)
+	run(INA[2],INB[2],dcyc,2)
+	run(INA[3],INB[3],dcyc,3)
+	run(INA[4],INB[4],dcyc,4)
+	run(INA[5],INB[5],dcyc,5)
 
 def init():
 	initGPIO(INA1, INB1)
@@ -99,6 +99,7 @@ def init():
 
 def callbackPT(data):
 	global dataMat
+	global PTpub
 	PT = np.array(data.data)
 	PT1 = PT[0]
 	PT2 = PT[1]
@@ -113,12 +114,12 @@ def callbackPT(data):
 def return2zero(INA, INB):			
 	print("All motors go back")
 	returnSpeed = -0.5;
-	run(INA[0],INB[0],-dcyc1,0)
-	run(INA[1],INB[1],-dcyc2,1)
-	run(INA[2],INB[2],-dcyc3,2)
-	run(INA[3],INB[3],-dcyc4,3)
-	run(INA[4],INB[4],-dcyc5,4)
-	run(INA[5],INB[5],-dcyc6,5)
+	run(INA[0],INB[0],dcycRev,0)
+	run(INA[1],INB[1],dcycRev,1)
+	run(INA[2],INB[2],dcycRev,2)
+	run(INA[3],INB[3],dcycRev,3)
+	run(INA[4],INB[4],dcycRev,4)
+	run(INA[5],INB[5],dcycRev,5)
 	time.sleep(10)			# Temporary
 #	pca.channels[0].duty_cycle = 0
 #	pca.channels[1].duty_cycle = 0
@@ -133,27 +134,25 @@ def return2zero(INA, INB):
 
 
 
+
+
 # Define the duty cycle value to test:
-dcyc =1
-dcyc1 = 0.85 # 
-dcyc2 = 0.53
-dcyc3 = 0.75
-dcyc4 = 0.7
-dcyc5 = 0.55
-dcyc6 = 0.56
+dcyc = .45
+dcycRev = -.45
 
 
-#def newCSV():
-#	rows = len(dataMat)
-#	with open('cmotData100.csv', 'w', newline='') as csvfile:
-#		csvwriter = csv.writer(csvfile)
-#		
-#		# Write file headers
-#		csvwriter.writerow(["PT1","PT2","PT3","PT4","PT5","PT6","Time (ms)"])
-#		
-#		#Traverse along rows and add dataMat values to csv file
-#		for i in range(rows):
-#			csvwriter.writerow(dataMat[i])
+def newCSV():
+	rows = len(dataMat)
+	with open('cmotData100.csv', 'w', newline='') as csvfile:
+		csvwriter = csv.writer(csvfile)
+		
+		# Write file headers
+		csvwriter.writerow(["PT1","PT2","PT3","PT4","PT5","PT6","Time (ms)"])
+		
+		#Traverse along rows and add dataMat values to csv file
+		for i in range(rows):
+			csvwriter.writerow(dataMat[i])
+
 
 def main():
 	# Initalize subscriber topics

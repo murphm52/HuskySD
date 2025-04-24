@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- Nodes to be launched -->
+	<node pkg="actuator_ctrl" type="ctrl_pathPID.py" name="path_node" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="ctrl_execPID.py" name="exec_node" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="PT.py" name="PT_node" output="screen" launch-prefix="xterm -e"/>
+</launch>

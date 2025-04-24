@@ -80,7 +80,13 @@ def talker():
 		V4 = float(CS4.voltage)
 		V5 = float(CS5.voltage)
 		V6 = float(CS6.voltage)
-		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(V1,V2,V3,V4,V5,V6)) # prints analog voltage for troubleshooting
+		C1 = float(abs(V1/0.140)) #divide by 0.140 V/Amp
+		C2 = float(abs(V2/0.140))
+		C3 = float(abs(V3/0.140))
+		C4 = float(abs(V4/0.140))
+		C5 = float(abs(V5/0.140))
+		C6 = float(abs(V6/0.140))
+		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(C1,C2,C3,C4,C5,C6)) # prints analog voltage for troubleshooting
 		csVol = Float32MultiArray()
 		csVol.data = [V1,V2,V3,V4,V5,V6]
 		pub.publish(csVol)

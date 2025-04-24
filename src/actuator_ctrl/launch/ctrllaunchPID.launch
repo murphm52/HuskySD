@@ -3,6 +3,7 @@
 
 	<!-- Nodes to be launched -->
 	<node pkg="actuator_ctrl" type="ctrl_path.py" name="path_node" output="screen" launch-prefix="xterm -e"/>
-	<node pkg="actuator_ctrl" type="ctrl_exec.py" name="exec_node" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="ctrl_exec2.py" name="exec_node" output="screen" launch-prefix="xterm -e"/>
 	<node pkg="actuator_ctrl" type="PT.py" name="PT_node" output="screen" launch-prefix="xterm -e"/>
+	<node pkg="actuator_ctrl" type="act_control.py" name="act_control" output="screen" launch-prefix="xterm -e"/>
 </launch>

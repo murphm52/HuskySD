@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- Nodes to be launched -->
+	<node pkg="actuator_ctrl" type="PT.py" name="PT_node" output="screen"/>
+	<node pkg="actuator_ctrl" type="ctrl_path2.py" name="path_node" output="screen"/>
+	<node pkg="actuator_ctrl" type="act_control3.py" name="control_node" output="screen"/>
+	<node pkg="actuator_ctrl" type="ctrl_exec2.py" name="exec_node" output="screen"/>
+
+</launch>

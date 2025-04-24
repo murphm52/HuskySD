@@ -79,9 +79,32 @@ def talker():
 		V4 = float(PT4.voltage)
 		V5 = float(PT5.voltage)
 		V6 = float(PT6.voltage)
-		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(V1,V2,V3,V4,V5,V6)) # prints analog voltage for troubleshooting
+		
+	#	L1 = float(163.158*(V1-0.245))
+	#	L2 = float(165.328*(V2-0.238))
+	#	L3 = float(165.581*(V3-0.238))
+	#	L4 = float(165.714*(V4-0.265))
+	#	L5 = float(165.550*(V5-0.264))
+	#	L6 = float(163.703*(V6-0.260))
+
+	#	L1 = float(2.020*(V1-0.245))
+	#	L2 = float(2.059*(V2-0.238))
+	#	L3 = float(2.052*(V3-0.238))
+	#	L4 = float(2.025*(V4-0.265))
+	#	L5 = float(2.033*(V5-0.264))
+	#	L6 = float(2.015*(V6-0.260))
+	
+		L1 = float( 292.35 + ((V1-0.243)/(2.970-0.243))*(444.75-292.35) )
+		L2 = float( 292.35 + ((V2-0.238)/(2.928-0.238))*(444.75-292.35) )
+		L3 = float( 292.35 + ((V3-0.238)/(2.924-0.238))*(444.75-292.35) )
+		L4 = float( 292.35 + ((V4-0.265)/(2.949-0.265))*(444.75-292.35) )
+		L5 = float( 292.35 + ((V5-0.264)/(2.950-0.264))*(444.75-292.35) )
+		L6 = float( 292.35 + ((V6-0.260)/(2.977-0.260))*(444.75-292.35) )
+	
+		print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(L1,L2,L3,L4,L5,L6)) # prints analog voltage for troubleshooting
+	#	print("{:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f} {:>5.3f}".format(V1,V2,V3,V4,V5,V6)) # prints analog voltage for troubleshooting
 		ptVol = Float32MultiArray()
-		ptVol.data = [V1,V2,V3,V4,V5,V6]
+		ptVol.data = [L1,L2,L3,L4,L5,L6]
 		pub.publish(ptVol)
 		rate.sleep()
     

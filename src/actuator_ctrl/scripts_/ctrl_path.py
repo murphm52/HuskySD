@@ -29,14 +29,10 @@ def csv_reader():
 				rate.sleep()
 	except IOError:
 		rospy.logerr("Failed to read the CSV file.")
-#		pubKill = rospy.Publisher('kill', boolean, queue_size=10)
-#		pubKill.publish(1)
 if __name__ == '__main__':
 	try:
 		csv_reader()
 	except rospy.ROSInterruptException:
 		pass
 	finally:
-#		pubKill = rospy.Publisher('kill', Bool, queue_size=10)
-#		pubKill.publish(1)
 		rospy.loginfo("Node interrupted.")
